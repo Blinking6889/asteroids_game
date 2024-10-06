@@ -45,11 +45,13 @@ def main():
         
         #Update player frames
         for i in drawable:
-            print(f'Drawable: {i}')
             i.draw(screen)
         for i in updatable:
-            print(f'Updatable: {i}')
             i.update(dt)
+        for i in agroup:
+            if i.detectCollision(p) == True:
+                print("Game Over!")
+                exit()
 
         #Refresh display
         pygame.display.flip()
