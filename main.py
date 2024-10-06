@@ -2,32 +2,56 @@ import pygame
 
 from constants import *
 from player import Player
+from asteroid import Asteroid
+from asteroidfield import AsteroidField
 
 def main():
     print("Starting asteroids!")
     print(f'Screen width: {SCREEN_WIDTH}\nScreen height: {SCREEN_HEIGHT}')
+
+    #Define Canvas Variables
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     clock = pygame.time.Clock()
     dt = 0
     dt = clock.tick(60)/1000
+
+    #Define sprite groups
+    #Player Groups
     updatable = pygame.sprite.Group()
     drawable = pygame.sprite.Group()
     Player.containers = (updatable, drawable)
+
+    #Asteroid Group
+    agroup = pygame.sprite.Group()
+    Asteroid.containers = (agroup, updatable, drawable)
+
+    #AsteroidField Group
+    afgroup = pygame.sprite.Group()
+    AsteroidField.containers = (updatable)
     
     #pg.containers = (updatable, drawable)
+    #Initialize player
     p = Player((SCREEN_WIDTH/2),(SCREEN_HEIGHT/2))
 
+    #Initialize Asteroid field
+    aobj = AsteroidField()
+
+    #Main Logic Loop
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return
         screen.fill((0,0,0))
-        #print(f'Attempting to draw player.')  
+        
+        #Update player frames
         for i in drawable:
+            print(f'Drawable: {i}')
             i.draw(screen)
         for i in updatable:
-            p.update(dt)
-        #pygame.draw.circle(screen, (255, 0, 0), (SCREEN_WIDTH//2, SCREEN_HEIGHT//2), 40)
+            print(f'Updatable: {i}')
+            i.update(dt)
+
+        #Refresh display
         pygame.display.flip()
 
 if __name__ == "__main__":
