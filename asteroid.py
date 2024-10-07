@@ -1,18 +1,34 @@
 import pygame
+import random
 
 from circleshape import CircleShape
+from constants import *
 
 class Asteroid(CircleShape):
     def __init__(self, x, y, radius):
         super().__init__(x,y,radius)
-        #self.vect = (x,y)
-        #print("Asteroid Object has been initialized")
+
 
     def draw(self, sobj):
-        #print("Asteroid Object has been drawn")
+
         pygame.draw.circle(sobj,"white",self.position, self.radius, 2)
 
     def update(self, dt):
-        #print("Asteroid Object has been updated")
-        #forward = pygame.Vector2(0, 1).rotate(self.rotation)
         self.position += (self.velocity * dt)
+
+    def rotate(self, dt):
+        self.rotation += (PLAYER_TURN_SPEED*dt)
+
+    def split(self):
+        self.kill()
+        if self.radius < ASTEROID_MIN_RADIUS:
+            return "This was a small asteroid."
+        randomAngle = random.uniform(20,50)
+        randomAngle1 = self.velocity.rotate(randomAngle)
+        randomAngle2 = self.velocity.rotate(-randomAngle)
+
+        new_radius = self.radius - ASTEROID_MIN_RADIUS
+        a1 = Asteroid(self.position.x,self.position.y, new_radius)
+        a1.velocity = randomAngle1 * 1.2
+        a2 = Asteroid(self.position.x,self.position.y, new_radius)
+        a2.velocity = randomAngle2 * 1.2
